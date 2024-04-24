@@ -1,9 +1,15 @@
 import { cn } from "@/lib/utils";
-import { ChevronsLeft, MenuIcon } from "lucide-react";
+import { ChevronsLeft, MenuIcon, PlusIcon, Search, Settings } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React, { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
+import UserItem from "./user-item";
+import Item from "./item";
 
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { toast } from "sonner";
+import DocumentList from "./document-list";
 function Navigation() {
   const isMobile = useMediaQuery("(max-width:768px)");
   const pathname = usePathname();
@@ -13,6 +19,7 @@ function Navigation() {
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
+  const create = useMutation(api.documents.create);
   useEffect(() => {
     if(isMobile){
       collapse();
@@ -84,6 +91,15 @@ function Navigation() {
         setTimeout(() => setIsResetting(false), 300)
     }
   }
+
+  const handleCreate = () => {
+    const promise = create({title : "Untitled"})
+    toast.promise(promise , {
+      "loading" : "Creating a new node..." ,
+      "success" : "New note created!" , 
+      "error" : 'Failed to create a new note.'
+    })
+  }
   return (
     <>
       <aside
@@ -104,8 +120,32 @@ function Navigation() {
         >
           <ChevronsLeft className="h-6 w-6" />
         </div>
+
+        <UserItem />
+          <Item 
+          onClick={() => {}}
+          label = "Search"
+          icon = {Search}
+          isSearch
+  
+          />
+          <Item 
+          onClick={() => {}}
+          label = "Settings"
+          icon = {Settings}
+          
+  
+          />
+        <Item 
+        onClick={handleCreate}
+        label = "New page"
+        icon = {PlusIcon}
+
+        />
         <div>
-          <p>action item</p>
+          {
+           <DocumentList />
+          }
         </div>
 
         <div className="mt-4">
