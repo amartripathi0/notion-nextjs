@@ -19,7 +19,7 @@ interface DocumentListProps {
   data?:Doc<"documents">[]
 }
 
-export function DocumentList ({parentDocumentId,level=0}:DocumentListProps) {
+export default function DocumentList ({parentDocumentId,level=0}:DocumentListProps) {
 
   const params = useParams()
   const router = useRouter()
